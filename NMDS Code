@@ -1,0 +1,27 @@
+NMDS <- metaMDS(comm=taxa_occur, autotransform = TRUE, distance="bray", engine="monoMDS", 
+                k=2, weakties= TRUE, model= "global", maxit=300, try=40, trymax=100)
+print(NMDS)
+plot(NMDS, display= "sites", type="t")
+points(NMDS, display="sites", cex=2)
+plot(NMDS$diss, NMDS$dist)
+
+
+data.scores = as.data.frame(scores(NMDS)$sites)
+summary(data.scores)
+NMDS_data <- LCBD_sites
+rownames(NMDS_data) <- NMDS_data[,1]
+NMDS_data <- NMDS_data[,-1]
+NMDS.env <- merge(data.scores, NMDS_data, by= 0)
+rownames(NMDS.env) <- NMDS.env[,1]
+NMDS.env <- NMDS.env[,-1]
+
+data.fit <- envfit(NMDS, NMDS.env, perm=999, na.rm=TRUE)
+plot(NMDS, dis="site")
+plot(data.fit)
+plot(NMDS$diss, NMDS$dist)
+
+plot(NMDS, dis="species")
+plot(data.fit)
+
+plot(NMDS)
+plot(data.fit)
